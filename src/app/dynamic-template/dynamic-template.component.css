@@ -1,0 +1,81 @@
+.switcher-row {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 24px;
+ margin-bottom: 24px;
+ padding: 16px 40px;
+ flex-wrap: wrap;
+}
+.template-selector {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+}
+.color-selector {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+}
+.color-options {
+ display: flex;
+ gap: 8px;
+ align-items: center;
+}
+.color-button {
+ width: 28px;
+ height: 28px;
+ border-radius: 50%;
+ border: 2px solid transparent;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.color-button:hover {
+ transform: scale(1.1);
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+.color-button.active {
+ border-color: #000;
+ box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(0, 0, 0, 0.3);
+ transform: scale(1.15);
+}
+.switcher-label {
+ font-weight: 600;
+ font-size: 14px;
+}
+.field-group {
+ margin-bottom: 20px;
+}
+.field-input {
+ display: block;
+ font-family: inherit;
+ transition: all 0.2s;
+}
+.field-input:focus {
+ outline: none;
+ box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+.textarea-field {
+ resize: vertical;
+ min-height: 90px;
+}
+.two-col-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 0 20px;
+}
+
+.submit-btn {
+ display: block;
+ transition: all 0.3s;
+ cursor: pointer;
+}
+.submit-btn:hover {
+ opacity: 0.9;
+ transform: translateY(-2px);
+}
+.submit-btn:active {
+ transform: translateY(0);
+}
+* { box-sizing: border-box; }

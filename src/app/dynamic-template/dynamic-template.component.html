@@ -1,0 +1,72 @@
+<div [ngStyle]="template.page">
+<div class="switcher-row">
+        <!-- Template selector dropdown -->
+<div class="template-selector">
+<span [style.color]="dropdownLabelColor" class="switcher-label">Template:</span>
+<select
+      [(ngModel)]="selectedTemplate"
+      (ngModelChange)="onTemplateChange()"
+      [ngStyle]="template.input"
+>
+<option *ngFor="let name of templateNames" [value]="name">{{ name }}</option>
+</select>
+</div>
+      <!-- colour options dropdown -->
+<div class="color-selector" *ngIf="currentLayoutColors.length > 0">
+<span [style.color]="dropdownLabelColor" class="switcher-label">Colours:</span>
+<div class="color-options">
+<button 
+  *ngFor="let colour of currentLayoutColors" 
+  [style.backgroundColor]="colour"
+  [class.active]="colour === currentAccentColor"
+  (click)="onColorChange(colour)"
+  class="color-button"
+  [title]="colour"
+></button>
+</div>
+</div>
+</div>
+    <!-- form card and title -->
+<div [ngStyle]="template.card">
+<div [ngStyle]="titleStyle">{{ formTitle }}</div>
+
+<ng-container *ngFor="let field of fields">
+<ng-container *ngTemplateOutlet="fieldTpl; context: { myfield: field }"></ng-container>
+</ng-container>
+    <!-- Submit button -->
+<button [ngStyle]="buttonStyle" class="submit-btn">Submit</button>
+</div>
+</div>
+     <!-- Reusable field template -->
+<ng-template #fieldTpl let-myfield="myfield">
+<div class="field-group">
+<label [ngStyle]="template.label">{{ myfield.label }}</label>
+<ng-container [ngSwitch]="myfield.type">
+<textarea *ngSwitchCase="'textarea'"
+        [(ngModel)]="formData[myfield.name]"
+        [name]="myfield.name"
+        [placeholder]="myfield.placeholder || ''"
+        [ngStyle]="inputStyle"
+        rows="3"
+        class="field-input textarea-field"
+></textarea>
+<select *ngSwitchCase="'select'"
+        [(ngModel)]="formData[myfield.name]"
+        [name]="myfield.name"
+        [ngStyle]="inputStyle"
+        class="field-input"
+>
+<option value="">-- Select --</option>
+<option *ngFor="let opt of myfield.options" [value]="opt">{{ opt }}</option>
+</select>
+<input *ngSwitchDefault
+        [type]="myfield.type"
+        [(ngModel)]="formData[myfield.name]"
+        [name]="myfield.name"
+        [placeholder]="myfield.placeholder || ''"
+        [ngStyle]="inputStyle"
+        class="field-input"
+/>
+</ng-container>
+</div>
+</ng-template>
