@@ -1,5 +1,12 @@
-<app-dynamic-template
- [fields]="fields"
- [formTitle]="'Contact Us'"
- [templateName]="'Classic Light'"
-></app-dynamic-template>
+<nav class="navbar">
+  <h2 class="nav-title">Hospital Management System</h2>
+  <div class="nav-links">
+    <a routerLink="/filter" routerLinkActive="active" class="nav-link">Hospital Data</a>
+    <a routerLink="/form" routerLinkActive="active" class="nav-link">Dynamic Form</a>
+    <a routerLink="/kanban" routerLinkActive="active" class="nav-link">Kanban Board</a>
+  </div>
+</nav>
+
+<div class="main-container">
+  <router-outlet></router-outlet>
+</div>

@@ -12,7 +12,7 @@ export interface TemplateStyle {
 export interface FormField {
  name: string;
  label: string;
- type: 'text' | 'email' | 'tel' | 'password' | 'textarea' | 'select';
+ type: 'text' | 'email' | 'tel' | 'password' | 'textarea' | 'select'|'date'|'number';
  placeholder?: string;
  options?: string[];
 }

@@ -1,0 +1,111 @@
+<div class="kanban-container" [ngStyle]="currentTemplate && currentTemplate.page">
+  <!-- Template Selector and Color Options -->
+  <div class="switcher-row">
+    <!-- Template Selector -->
+    <div class="template-selector">
+      <label for="template-select" [ngStyle]="currentTemplate && currentTemplate.label" class="switcher-label">Select Template:</label>
+      <select id="template-select" [(ngModel)]="selectedTemplateName" (change)="onTemplateChange()" 
+              [ngStyle]="currentTemplate && currentTemplate.input" class="template-dropdown">
+        <option *ngFor="let template of availableTemplates" [value]="template">
+          {{ template }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Color Options -->
+    <div class="color-selector" *ngIf="currentLayoutColors.length > 0">
+      <span [style.color]="dropdownLabelColor" class="switcher-label">Colours:</span>
+      <div class="color-options">
+        <button 
+          *ngFor="let colour of currentLayoutColors" 
+          [style.backgroundColor]="colour"
+          [class.active]="colour === currentAccentColor"
+          (click)="onColorChange(colour)"
+          class="color-button"
+          [title]="colour">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Storage Section -->
+  <div class="template-storage" style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+    <div class="save-template" style="margin-bottom: 10px;">
+      <input [(ngModel)]="saveTemplateName" placeholder="Save template as..." [ngStyle]="currentTemplate && currentTemplate.input" style="width: 200px;" />
+      <button (click)="saveCurrentTemplate()" [ngStyle]="buttonStyle" style="width: auto; margin-left: 5px;">Save Template</button>
+    </div>
+    
+    <div class="saved-templates" *ngIf="savedTemplates.length > 0">
+      <span [style.color]="dropdownLabelColor" class="switcher-label">Saved Templates:</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+        <div *ngFor="let tmpl of savedTemplates" style="display: flex; gap: 6px; align-items: center;">
+          <button (click)="loadSavedTemplate(tmpl)"
+                  style="padding: 8px 12px; font-size: 13px; background: #6b7280; color: white; border: 1px solid #4b5563; border-radius: 4px; cursor: pointer;">
+            Load: {{ tmpl }}
+          </button>
+          <button (click)="deleteSavedTemplate(tmpl)"
+                  style="padding: 8px 12px; font-size: 13px; background: #6b7280; color: white; border: 1px solid #4b5563; border-radius: 4px; cursor: pointer;">
+            Delete: {{ tmpl }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="statusMessage" [ngStyle]="{ color: '#16a34a', fontSize: '12px', marginTop: '10px', fontWeight: 'bold' }">
+      {{ statusMessage }}
+    </div>
+  </div>
+
+  <h1 class="board-title" [ngStyle]="titleStyle">Kanban Board</h1>
+
+  <div class="add-column">
+    <input [(ngModel)]="newColumn" placeholder="Enter column name" [ngStyle]="inputStyle" />
+    <button (click)="addColumn()" [ngStyle]="buttonStyle">Add Column</button>
+  </div>
+
+  <div class="add-task">
+    <input [(ngModel)]="title" placeholder="Enter task" [ngStyle]="inputStyle" />
+    <button (click)="addTask()" [ngStyle]="buttonStyle">Add Task</button>
+  </div>
+
+
+
+  <div class="board" (dblclick)="clearSelection()">
+
+    <div class="column" [ngStyle]="currentTemplate && currentTemplate.card"
+         *ngFor="let col of columns; let i = index"
+         (click)="selectColumn(col.id)"
+         [class.selected]="selectedColumnId === col.id"
+         (dragover)="allow($event)"
+         (dragenter)="allow($event)"
+         (drop)="handleDrop(i, col.id)">
+
+      <h3 [ngStyle]="titleStyle">{{ col.name }}</h3>
+
+      <div class="card" [ngStyle]="currentTemplate && currentTemplate.card"
+           *ngFor="let t of getTasksByColumn(col.id)"
+           draggable="true"
+           (mousedown)="$event.stopPropagation()"
+           (dragstart)="handleDragStart($event, t)"
+           (dragend)="handleDragEnd()"
+           (click)="$event.stopPropagation(); toggleTask(t)"
+           [class.selected]="selectedTasks.includes(t)">
+
+        <span class="priority-icon"
+              [ngClass]="{
+                'low': t.priority === 'Low',
+                'medium': t.priority === 'Medium',
+                'high': t.priority === 'High'
+              }"
+              (click)="$event.stopPropagation(); change(t)">
+        </span>
+        {{ t.title }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <button class="clear-btn" (click)="clearAll()" [ngStyle]="buttonStyle">Clear Board</button>
+</div>
+

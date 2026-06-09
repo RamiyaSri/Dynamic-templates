@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DynamicTemplateService, TemplateStyle, FormField } from '../dynamic-template.service';
+import { DynamicTemplateService, FormField, TemplateStyle } from '../dynamic-template.service';
+import { FormDataService } from '../services/form-data.service';
 
 @Component({
   selector: 'app-dynamic-template',
@@ -24,14 +25,18 @@ export class DynamicTemplateComponent implements OnInit, OnChanges {
   colorOptionsPerTemplate: { [key: string]: string[] } = {
     'Classic Light': ['#2563eb', '#16a34a', '#a855f7', '#dc2626', '#0891b2', '#ea580c'],
     'Modern Clean': ['#667eea', '#f59e0b', '#10b981', '#ef4444', '#06b6d4', '#8b5cf6'],
-    'Elegant Dark': ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#d4066d', '#10b981']
+    'Elegant Dark': ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#d4066d', '#10b981'],
+    'Minimal Earthy': ['#a89884', '#8b7355', '#c4a574', '#9d8b7e', '#b8956a', '#6b5c54']
   };
   //Default colours of template
   selectedColors: { [key: string]: string } = {
     'Classic Light': '#2563eb',
     'Modern Clean': '#667eea',
-    'Elegant Dark': '#06b6d4'
+    'Elegant Dark': '#06b6d4',
+    'Minimal Earthy': '#a89884'
   };
+
+  private formDataService = inject(FormDataService);
 
   constructor(private templateService: DynamicTemplateService) {}
 
@@ -39,6 +44,13 @@ export class DynamicTemplateComponent implements OnInit, OnChanges {
     this.templateNames = this.templateService.getTemplateNames();
     this.selectedTemplate = this.templateName;
     this.applyTemplate();
+    
+    // Subscribe to form fields from service
+    this.formDataService.formFields$.subscribe(fields => {
+      if (fields.length > 0) {
+        this.fields = fields;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -75,9 +87,6 @@ export class DynamicTemplateComponent implements OnInit, OnChanges {
   }
 
   get buttonStyle(): { [key: string]: string } {
-    if (this.selectedTemplate === 'Minimal Earthy') {
-      return this.template?.button || {};
-    }
     return {
       ...this.template?.button,
       'background': this.currentAccentColor
@@ -85,9 +94,6 @@ export class DynamicTemplateComponent implements OnInit, OnChanges {
   }
 
   get inputStyle(): { [key: string]: string } {
-    if (this.selectedTemplate === 'Minimal Earthy') {
-      return this.template?.input || {};
-    }
     return {
       ...this.template?.input,
       'borderColor': this.currentAccentColor
@@ -95,9 +101,6 @@ export class DynamicTemplateComponent implements OnInit, OnChanges {
   }
 
   get titleStyle(): { [key: string]: string } {
-    if (this.selectedTemplate === 'Minimal Earthy') {
-      return this.template?.title || {};
-    }
     return {
       ...this.template?.title,
       'color': this.currentAccentColor
